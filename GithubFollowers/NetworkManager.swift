@@ -12,27 +12,27 @@ class NetworkManager{
         
     }
     let baseurl = "https://api.github.com/"
-    func getfollowers(for username : String , page : Int , completed : @escaping([Follower]?,String?) -> Void) {
+    func getfollowers(for username : String , page : Int , completed : @escaping(Result<[Follower],ErrorMessage>) -> Void) {
         let endpoint =  baseurl + "users/\(username)/followers?per_page=100&page=\(page)"
         guard let url = URL(string: endpoint) else {
-            completed(nil,"error1")
+            completed(.failure(.invalidUsername))
             return
         }
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let _ = error {
-                completed(nil,"error2")
+                completed(.failure(.unableToComplete))
             }
             guard let data = data else {
-                completed(nil,"error3")
+                completed(.failure(.invalidData))
                 return
             }
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let followers = try decoder.decode([Follower].self, from: data)
-                completed(followers,nil)
+                completed(.success(followers))
             } catch {
-                completed(nil,"error4")
+                completed(.failure(.invalidData) )
             }
         }
         
