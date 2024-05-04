@@ -8,7 +8,7 @@
 import UIKit
 
 class GFAvatarImageView: UIImageView {
-
+    let cache = NetworkManager.shared.cache
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -27,6 +27,13 @@ class GFAvatarImageView: UIImageView {
     func downloadimage(from UrlString : String) {
         guard let url = URL(string: UrlString) else {return}
         
+        let cachekey = NSString(string: UrlString)
+        
+        if let image = cache.object(forKey: cachekey)  {
+            self.image = image
+            return
+        }
+        
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self else {return}
             if error != nil {
@@ -35,6 +42,7 @@ class GFAvatarImageView: UIImageView {
             guard let data = data else {return}
             
             guard let image = UIImage(data: data) else {return}
+            self.cache.setObject(image, forKey: cachekey)
             DispatchQueue.main.async {
                 self.image = image
             }

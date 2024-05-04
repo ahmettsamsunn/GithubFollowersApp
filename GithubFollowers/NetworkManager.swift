@@ -5,9 +5,10 @@
 //  Created by Ahmet Samsun on 13.04.2024.
 //
 
-import Foundation
+import UIKit
 class NetworkManager{
     static let shared = NetworkManager()
+    let cache = NSCache<NSString,UIImage>()
     private init() {
         
     }
