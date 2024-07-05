@@ -40,4 +40,31 @@ class NetworkManager{
         
         task.resume()
     }
+    func getuser(for username : String , completed : @escaping(Result<User,ErrorMessage>) -> Void) {
+        let endpoint =  baseurl + "users/\(username)"
+        guard let url = URL(string: endpoint) else {
+            completed(.failure(.invalidUsername))
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let _ = error {
+                completed(.failure(.unableToComplete))
+            }
+            guard let data = data else {
+                completed(.failure(.invalidData))
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let user = try decoder.decode(User.self, from: data)
+                completed(.success(user))
+            } catch {
+                completed(.failure(.invalidData) )
+            }
+        }
+        
+        
+        task.resume()
+    }
 }
