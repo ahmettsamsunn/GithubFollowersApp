@@ -5,6 +5,7 @@
 //  Created by Ahmet Samsun on 12.04.2024.
 //
 import UIKit
+import SafariServices
 
 fileprivate var containerview : UIView!
 extension UIViewController {
@@ -15,6 +16,11 @@ extension UIViewController {
             alertVC.modalTransitionStyle = .crossDissolve
             self.present(alertVC, animated: true)
         }
+    }
+    func presentsafariVC(with url : URL){
+        let safariVc = SFSafariViewController(url: url)
+        safariVc.preferredBarTintColor = .systemGreen
+        present(safariVc, animated: true)
     }
     func showloadingview(){
         containerview = UIView(frame: view.bounds)

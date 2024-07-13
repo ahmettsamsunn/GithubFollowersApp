@@ -12,7 +12,7 @@ let stackview = UIStackView()
 let itemInfoViewOne = GFItemInfoView()
 let itemInfoViewTwo = GFItemInfoView()
 let actionbutton = GFButton()
-    
+   weak var delegate : UserInfoDelegate!
     var user : User!
     init(user: User) {
         super.init(nibName: nil, bundle: nil)
@@ -28,12 +28,19 @@ let actionbutton = GFButton()
             configureView()
             layoutui()
             configurestackview()
+            configureactionbutton()
             }
     
 
     func configureView(){
         view.layer.cornerRadius = 18
-        view.backgroundColor = .secondaryLabel
+        view.backgroundColor = .secondarySystemBackground
+    }
+   private func configureactionbutton(){
+        actionbutton.addTarget(self, action: #selector(actionbuttontapped), for: .touchUpInside)
+    }
+    @objc func actionbuttontapped(){
+        
     }
     private func configurestackview(){
         stackview.axis = .horizontal
