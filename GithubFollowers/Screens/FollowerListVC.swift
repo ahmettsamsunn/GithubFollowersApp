@@ -119,7 +119,7 @@ class FollowerListVC: UIViewController {
                     }
                     
                 }catch {
-                    self.presentGFAlertOnMainThread(title: "Something went wrong", message: "Bir şeyler ters gitti", buttontitle: "Ok")
+                    self.presentGFAlertOnMainThread(title: "Hata", message: "Bir şeyler ters gitti", buttontitle: "Ok")
                 }
             }
           
