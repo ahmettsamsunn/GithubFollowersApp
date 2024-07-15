@@ -11,4 +11,5 @@ enum ErrorMessage : String,Error {
     case unableToComplete = "İsteğiniz tamamlanamadı.Lütfen internet bağlantınızı kontrol ediniz"
     case invalidResponse = "Geçersiz cevap.Lütfen tekrar deneyiniz"
     case invalidData = "Gelen datalar geçersiz.Lütfen tekrar deneyiniz."
+    case alreadyinfavorites = "Kullanıcı zaten favorilerinizde"
 }

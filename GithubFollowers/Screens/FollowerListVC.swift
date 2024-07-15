@@ -45,10 +45,12 @@ class FollowerListVC: UIViewController {
     func configureViewController(){
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = true
+        let addbutton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addbuttontapped))
+        navigationItem.rightBarButtonItem = addbutton
     }
     
     
-    func getFollowers(username : String,page : Int){
+ /*  func getFollowers(username : String,page : Int){
         showloadingview()
         NetworkManager.shared.getfollowers(for: username, page: page) { [weak self] result in
             
@@ -56,22 +58,75 @@ class FollowerListVC: UIViewController {
             self.dismissloadingview()
             switch result {
             case .success(let followers):
-                if  followers.count < 100 {self.hasmorefollowers = false}
-                self.followers.append(contentsOf: followers)
-                if self.followers.isEmpty {
-                    let message = " Kullanıcının hiç takipçisi yok 🥲.hBelki sen takip etmek isteyebilirsin. "
-                    DispatchQueue.main.async {
-                        self.showemptystatesview(with: message, in: self.view)
-                    }
-                    
-                }
-                self.updateData(on: self.followers)
+                updateUI(with: followers)
             case .failure(let error):
                 self.presentGFAlertOnMainThread(title: "Bir terlik var...", message: error  .rawValue, buttontitle: "ok")
             }
         }
+    }*/
+    
+   func getFollowers(username : String,page : Int){
+        showloadingview()
+        hasmorefollowers = true
+
+        Task {
+            do {
+                let followers = try await NetworkManager.shared.getfollowers(for: username, page: page)
+                updateUI(with: followers)
+                dismissloadingview()
+            } catch {
+                if let gferror = error as? ErrorMessage {
+                    presentGFAlertOnMainThread(title: "hata1", message: "hata2", buttontitle: "tamam")
+                }else {
+                    presentGFAlertOnMainThread(title: "tamam", message: "tamam", buttontitle: "tamam")
+                }
+                dismissloadingview()
+            }
+        }
     }
    
+    func updateUI(with followers : [Follower]) {
+        if  followers.count < 100 {self.hasmorefollowers = false}
+        self.followers.append(contentsOf: followers)
+        if self.followers.isEmpty {
+            let message = " Kullanıcının hiç takipçisi yok 🥲.hBelki sen takip etmek isteyebilirsin. "
+            DispatchQueue.main.async {
+                self.showemptystatesview(with: message, in: self.view)
+            }
+            
+        }
+        self.updateData(on: self.followers)
+    }
+
+    @objc func addbuttontapped(){
+        showloadingview()
+        
+        func getUserInfo(){
+            self.dismissloadingview()
+            Task {
+                do {
+                    let userinfo = try await NetworkManager.shared.getuser(for: username)
+                    let favorite = Follower(login: userinfo.login, avatarUrl: userinfo.avatarUrl)
+                    PersistanceManager.updateWith(favorite: favorite, actionType: .add) { [weak self] error in
+                        guard let self = self else {
+                            return
+                        }
+                        guard let error = error else {
+                            self.presentGFAlertOnMainThread(title: "Tebrikler", message: "Kullanıcı başarıyla favorilerinize eklendi", buttontitle: "Tamam")
+                            return
+                        }
+                        self.presentGFAlertOnMainThread(title: "Hata", message:error.rawValue, buttontitle: "Tamam")
+                    }
+                    
+                }catch {
+                    self.presentGFAlertOnMainThread(title: "Something went wrong", message: "Bir şeyler ters gitti", buttontitle: "Ok")
+                }
+            }
+          
+        }
+
+    }
+    
     
     func configureCollectionView(){
         collectioview = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createThreeColoumnFlowLayout(in: view))

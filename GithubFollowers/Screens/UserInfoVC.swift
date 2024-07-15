@@ -32,18 +32,18 @@ class UserInfoVC: UIViewController {
         navigationItem.rightBarButtonItem = donebutton
     }
     func getUserInfo(){
-        NetworkManager.shared.getuser(for: username) { [weak self] result in
-            guard let self = self else {return}
-            switch result {
-            case .success(let user):
+        Task {
+            do {
+                let userinfo = try await NetworkManager.shared.getuser(for: username)
                 DispatchQueue.main.async {
-                    self.configureUIElements(with: user)
+                    self.configureUIElements(with: userinfo)
                 }
                 
-            case .failure(let failure):
-                self.presentGFAlertOnMainThread(title: "Bir şeyler ters gitti", message: failure.rawValue, buttontitle: "Ok")
+            }catch {
+                self.presentGFAlertOnMainThread(title: "Hata", message: "Bir şeyler ters gitti", buttontitle: "Tamam")
             }
         }
+      
     }
     func configureUIElements(with user : User){
         let repoVC = GFRepoItemVC(user: user)
