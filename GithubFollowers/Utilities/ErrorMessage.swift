@@ -7,9 +7,9 @@
 
 import Foundation
 enum ErrorMessage : String,Error {
-    case invalidUsername = "Girdiğiniz kullanıcı adına sahip bir kullanıcı bulunamadı.Lütfen tekrar deneyiniz"
-    case unableToComplete = "İsteğiniz tamamlanamadı.Lütfen internet bağlantınızı kontrol ediniz"
-    case invalidResponse = "Geçersiz cevap.Lütfen tekrar deneyiniz"
-    case invalidData = "Gelen datalar geçersiz.Lütfen tekrar deneyiniz."
-    case alreadyinfavorites = "Kullanıcı zaten favorilerinizde"
+    case invalidUsername = "The user you search does not exist. Please try again with a different username"
+    case unableToComplete = "Your request couldn’t completed. Please check your internet connection"
+    case invalidResponse = "İnvalid response.Please try again"
+    case invalidData = "İnvalid data.Please try again."
+    case alreadyinfavorites = "This User is already in your favorites list."
 }

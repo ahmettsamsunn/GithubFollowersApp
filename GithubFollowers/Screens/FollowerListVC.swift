@@ -76,9 +76,9 @@ class FollowerListVC: UIViewController {
                 dismissloadingview()
             } catch {
                 if let gferror = error as? ErrorMessage {
-                    presentGFAlertOnMainThread(title: "hata1", message: "hata2", buttontitle: "tamam")
+                    presentGFAlertOnMainThread(title: "Error", message: gferror.rawValue, buttontitle: "Ok")
                 }else {
-                    presentGFAlertOnMainThread(title: "tamam", message: "tamam", buttontitle: "tamam")
+                    presentGFAlertOnMainThread(title: "Error", message: "Something went wrong", buttontitle: "Ok")
                 }
                 dismissloadingview()
             }
@@ -89,7 +89,7 @@ class FollowerListVC: UIViewController {
         if  followers.count < 100 {self.hasmorefollowers = false}
         self.followers.append(contentsOf: followers)
         if self.followers.isEmpty {
-            let message = " Kullanıcının hiç takipçisi yok 🥲.hBelki sen takip etmek isteyebilirsin. "
+            let message = " This user has no followers 🥲.You can be the first. "
             DispatchQueue.main.async {
                 self.showemptystatesview(with: message, in: self.view)
             }
@@ -101,7 +101,7 @@ class FollowerListVC: UIViewController {
     @objc func addbuttontapped(){
         showloadingview()
         
-        func getUserInfo(){
+        
             self.dismissloadingview()
             Task {
                 do {
@@ -112,18 +112,18 @@ class FollowerListVC: UIViewController {
                             return
                         }
                         guard let error = error else {
-                            self.presentGFAlertOnMainThread(title: "Tebrikler", message: "Kullanıcı başarıyla favorilerinize eklendi", buttontitle: "Tamam")
+                            self.presentGFAlertOnMainThread(title: "Bravo", message: "User successfully added to your favorites list", buttontitle: "Ok")
                             return
                         }
-                        self.presentGFAlertOnMainThread(title: "Hata", message:error.rawValue, buttontitle: "Tamam")
+                        self.presentGFAlertOnMainThread(title: "Error", message:error.rawValue, buttontitle: "Ok")
                     }
                     
                 }catch {
-                    self.presentGFAlertOnMainThread(title: "Hata", message: "Bir şeyler ters gitti", buttontitle: "Ok")
+                    self.presentGFAlertOnMainThread(title: "Error", message: "Something went wrong", buttontitle: "Ok")
                 }
             }
           
-        }
+        
 
     }
     
@@ -140,7 +140,7 @@ class FollowerListVC: UIViewController {
         let searchController = UISearchController()
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Bir kullanıcı arayın"
+        searchController.searchBar.placeholder = "Search for a user"
         searchController.obscuresBackgroundDuringPresentation = true
         navigationItem.searchController = searchController
     }

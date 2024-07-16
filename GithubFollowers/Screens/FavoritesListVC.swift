@@ -23,7 +23,7 @@ class FavoritesListVC: UIViewController {
     }
     func configureView(){
         view.backgroundColor = .systemBackground
-        title = "Favoriler"
+        title = "Favorites"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     func configureTableView(){
@@ -42,7 +42,7 @@ class FavoritesListVC: UIViewController {
             switch result {
             case .success(let favorites):
                 if favorites.isEmpty {
-                    self.showemptystatesview(with: "Favorilerinizde kimse yok.Belki birilerini eklemek isteyebilirsiniz", in: self.view)
+                    self.showemptystatesview(with: "Your favorites list is empty. You might want to add some people.", in: self.view)
                 }else {
                     self.favorites = favorites
                     DispatchQueue.main.async {
@@ -51,7 +51,7 @@ class FavoritesListVC: UIViewController {
                 }
                 
             case .failure(let failure):
-                self.presentGFAlertOnMainThread(title: "Bir sorun oluştu", message: "Sorun", buttontitle: "Tamam")            }
+                self.presentGFAlertOnMainThread(title: "Something went wrong", message: failure.localizedDescription, buttontitle: "Ok")            }
         }
     }
     
@@ -90,7 +90,7 @@ extension FavoritesListVC : UITableViewDataSource,UITableViewDelegate {
             guard let error = error else {
                 return
             }
-            self.presentGFAlertOnMainThread(title: "Kullanıcı silinemedi", message: error.rawValue, buttontitle: "Tamam")
+            self.presentGFAlertOnMainThread(title: "User could not be deleted", message: error.rawValue, buttontitle: "Ok")
         }
     }
 }

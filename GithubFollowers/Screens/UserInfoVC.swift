@@ -40,7 +40,7 @@ class UserInfoVC: UIViewController {
                 }
                 
             }catch {
-                self.presentGFAlertOnMainThread(title: "Hata", message: "Bir şeyler ters gitti", buttontitle: "Tamam")
+                self.presentGFAlertOnMainThread(title: "Error", message: "Something went wrong", buttontitle: "Ok")
             }
         }
       
